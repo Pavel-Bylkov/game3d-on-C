@@ -1,0 +1,113 @@
+code # 150
+Wrong number of arguments.
+DESCRIPTION: There can be only one or two arguments.
+The first argument MUST be a '.cub' map-file.
+The second argument CAN be '--save', in this case the 'cub3D' just takes screenshot of spawn scene and quits.
+##
+code # 151
+Invalid map file or it's path (open/close failed).
+##
+code # 152
+Invalid map file name or path.
+DESCRIPTION: the first argument is always the path to the map file, and it must have a name with at least one character and an extension '.cub'.
+##
+code # 153
+Wrong second argument.
+DESCRIPTION: it can be only '--save', in this case the 'cub3D' just takes screenshot of spawn scene and quits.
+##
+code # 154
+Parsing the map file with 'get_next_line' function failed.
+##
+code # 155
+Memory allocation failed ('malloc' function returned 'NULL').
+##
+code # 156
+While parsing the map file, the string with invalid identifier was found.
+DESCRIPTION: the firsts information in each non-empty string must be identifier:
+'R', 'NO', 'SO', 'WE', 'EA', 'S', 'F' or 'C' (splitted from other data by at least one 'space-symbol').
+##
+code # 157
+String identifier occurs more than once in the file.
+DESCRIPTION: each options string must be occured only once.
+##
+code # 158
+Invalid string while map parsing detected:
+##
+code # 159
+Empty string after the map detected.
+The map must be at the end of file (remove everything after the map).
+##
+code # 160
+Invalid resolution string format.
+DESCRIPTION: it must start by 'R' identifier and have only positive integer values of X and Y resolution, separated from each other by space-symbol(s).
+Examples of valid string:
+'R 1920 1080'
+'R    1024    768'
+##
+code # 161
+Invalid resolution, it must be at least '100 x 100'.
+##
+code # 162
+Invalid texture file path (open/close failed).
+Check that the path to the texture does not start with a space symbol and there are no space symbols in the string after the texture name.
+##
+code # 163
+Invalid format of string with identifier.
+Examples of valid string:
+'F  128, 0, 255'
+'C  25,196,64'
+##
+code # 164
+Invalid RGB color code in string with identifier.
+R,G,B colors must be in range [0,255]: 0, 255, 255.
+##
+code # 165
+Not all parameters were found before starting the map.
+DESCRIPTION: all strings with identifiers: 'R', 'NO', 'SO', 'WE', 'EA', 'S', 'F' or 'C' must be placed before map.
+##
+code # 166
+Map line is invalid.
+DESCRIPTION: The map must be composed of only 4 possible characters:
+0 for an empty space, 1 for a wall, 2 for an item and N,S,E or W for the player's start position and spawning orientation.
+Also it CAN be the space symbol (' '), BUT ONLY for free space outside of the walls area.
+And finally: the map must be closed/surrounded by walls.
+##
+code # 167
+The spawn point is found on the map more than once.
+##
+code # 168
+The spawn point was not found on the map.
+##
+code # 169
+The map was not found in the scene description file.
+##
+code # 170
+Invalid first map line.
+DESCRIPTION: in the first line of the map there can be no characters other than 1 and a space (' ')
+(the map must be closed/surrounded by walls).
+##
+code # 171
+Map column is invalid.
+DESCRIPTION: the map must be closed/surrounded by walls.
+##
+code # 172
+mlx_init() fails to set up the connection to the X server.
+##
+code # 173
+mlx_new_window() fails to create a new window.
+##
+code # 174
+mlx_new_image() fails to create a new image.
+##
+code # 175
+mlx_get_data_addr() fails to get the data address of the current image.
+##
+code # 176
+mlx_xpm_file_to_image() failed while reading texture.
+##
+code # 177
+Save and close screenshot file failed.
+##
+code # 178
+Initialization config failed.
+##

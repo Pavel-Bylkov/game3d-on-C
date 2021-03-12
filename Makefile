@@ -1,70 +1,67 @@
-OS := $(shell uname)
+NAME	= Cub3D
 
-NAME = Cub3D
+LIBFT	= ./Libft/libft.a
+MLX		= ./minilibx_mms/libmlx.dylib
+MLX_DIR = ./minilibx_mms/
 
-LIBFT = ./libft/libft.a
-LIBFT_SRC := $(wildcard libft/*.c)
-LIBFT_OBJ := $(patsubst libft/%.c, libft/%.o, $(LIBFT_SRC))
+COMP	= gcc
+FLAG_GCC = -Wall -Wextra -Werror
 
-COMP = gcc -Wall -Wextra -Werror -g3
-INCLUDES = -Iincludes -Imlx -Llibft -lft -Lmlx -lmlx -framework OpenGL -framework AppKit -lm
-ifeq ($(OS), Linux)
-INCLUDES = -Iincludes -I/usr/local/include/ -Llibft -lft -lm -L/usr/local/lib/ -lmlx -lXext -lX11 -lpthread
-endif
+CUB_FUNC = main.c \
+			parsing_conf.c \
+			get_next_line.c get_next_line_utils.c
 
-SRC := $(wildcard src/*.c)
-OBJ := $(patsubst src/%.c, obj/%.o, $(SRC))
+SOURCES = src
+OBJ = objects
 
-GREEN = \e[1m\e[32m
-RESET = \e[0m
+FILES_C = $(addprefix $(SOURCES)/,$(CUB_FUNC))
+FILES_O = $(addprefix $(OBJ)/,$(CUB_FUNC:.c=.o))
 
-MLX = ./mlx/libmlx.a
+FLAG_MLX = -framework OpenGL -framework Appkit
+
+INCLUDES = -I includes/ -I $(MLX_DIR)
 
 all: $(NAME)
 
-$(NAME): $(LIBFT) $(MLX) $(OBJ)
-	@echo -e "$(GREEN)==> Making Cub3D$(RESET)"
-	$(COMP) $(INCLUDES) $(OBJ) $(LIBFT) -o $(NAME)
+$(NAME): $(LIBFT) $(MLX) $(FILES_O)
+	@$(COMP) $(MLX) $(FLAG_MLX) $(FILES_O) $(INCLUDES) $(LIBFT) -o $(NAME)
+	@echo "Ready"
 
-$(LIBFT): $(LIBFT_OBJ)
-	@echo -e "$(GREEN)==> Making LIBFT$(RESET)"
-	ar rcs $(LIBFT) $(LIBFT_OBJ)
+$(OBJ)/%.o : $(SOURCES)/%.c
+	@mkdir -p $(OBJ)
+	@$(COMP) $(FLAG_GCC) -o $@ -c $^
+	@echo "$@ ready"
 
-libft/%.o: libft/%.c
-	$(COMP) -Iincludes -c $< -o $@
-
-obj/%.o: src/%.c
-	mkdir -p obj
-	$(COMP) -Iincludes -c $< -o $@
-
-run: $(NAME)
-	@echo -e "$(GREEN)==> Running Cub3D$(RESET)"
-	@./$(NAME) ./maps/map1.cub
-
-save: $(NAME)
-	@echo -e "$(GREEN)==> Running Cub3D with --save arg$(RESET)"
-	@./$(NAME) ./maps/map1.cub --save
+$(LIBFT):
+	@make -C Libft/
+	@echo 'Making libft done'
 
 $(MLX):
-	@echo -e "$(GREEN)==> Making MLX$(RESET)"
-	make -C ./mlx
+	@make -C $(MLX_DIR)
+	@echo 'Making minilibx done'
 
-norme:
-	#grep "printf" */*.[ch]
-	norminette src/*
-	norminette includes/*
-	norminette libft/*
+run: all
+	./$(NAME) ./maps/map1.cub
+
+save: all
+	./$(NAME) ./maps/map1.cub --save
+
+norma:
+	norminette ./src/ ./libft/*.c ./libft/*.h ./includes/
 
 clean:
-	rm -rf libft/*.o obj/* mlx/*.o
-	rm -rf screenshot.bmp
+	@rm -f $(FILES_O)
+	@rm -rf $(OBJ)
+	@make clean -C ./libft
+	@make clean -C $(MLX_DIR)
+	@echo "O-files deleted"
 
 fclean: clean
-	rm -rf $(NAME) *.dSYM $(LIBFT)
-	make -C ./mlx clean
+	@rm -f $(NAME)
+	@rm -rf *.bmp
+	@make fclean -C ./libft
+	@echo "All files delete"
 
 re: fclean all
-
-rerun: re run
 
 .PHONY: clean fclean all re

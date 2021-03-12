@@ -1,0 +1,12 @@
+R        700   700
+NO    ./textures/gold.xpm
+SO    ./textures/green.xpm
+WE       ./textures/gradient.xpm
+EA       ./textures/poligons.xpm
+S         ./textures/spiral.xpm
+F       33,   68,     25
+C  52  ,    1,    88
+
+  1
+ 1N1
+  1

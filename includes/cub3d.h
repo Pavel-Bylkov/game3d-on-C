@@ -1,42 +1,177 @@
-#ifndef FT_PRINTF_H
-# define FT_PRINTF_H
+#ifndef CUB3D_H
+# define CUB3D_H
 
-# include <stdarg.h>
-# include <sys/types.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <math.h>
+# include <errno.h>
+# include <string.h>
 # include "libft.h"
+# include "get_next_line.h"
+# include "mlx.h"
 
-typedef struct		s_data
+# define ERRORS_FILE "./errors/errors.txt"
+# define PLAYER_SPEED 0.1
+# define ROTATE_SPEED 3.0
+# define RAYS 200.0
+# define FOV 45.0
+# ifndef INF
+#  define INF 100000000.0
+# endif
+# define SCALE 64
+# define KEY_W 13
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+# define KEY_RIGHT 124
+# define KEY_LEFT 123
+# define KEY_ESCAPE 53
+
+typedef struct	s_keys
 {
-	char			*str;
-	size_t			len;
-	unsigned char	flag;
-	ssize_t			width;
-	ssize_t			precision;
-	int				length;
-	char			type;
-	int				upper;
-	size_t			shift;
-	int				len_print;
-	size_t			i;
-	int				error;
-	int				zero;
-}					t_data;
+    int k_left;
+    int k_right;
+    int k_w;
+    int k_a;
+    int k_s;
+    int k_d;
+}				t_keys;
 
-int					ft_printf(const char *format, ...);
-void				get_chars(va_list *ap, t_data *new);
-void				ft_get_str_number(char *str, t_data *new, size_t len_nbr);
-void				ft_get_p(char *str, t_data *new);
-void				ft_get_x(char *str, t_data *new, size_t len_nbr);
-char				*ft_itoa_base(unsigned long long int res, char *base,
-									int b, int flag);
-int					check_precision(char *str, t_data *new, size_t len_nbr,
-									size_t *len_buf);
-size_t				change_str(char **str, t_data *new, char **tmp,
-									size_t len_buf);
-void				get_str_from_param(va_list *ap, t_data *new);
-void				fill_with_char(char **buf, size_t bufsize,
-									char *c, ssize_t len_nbr);
-size_t				print_string(const char *str, t_data *new);
-size_t				scan_params(va_list *ap, const char *str, t_data *new);
+typedef struct	s_raycasting_data
+{
+    int	res;
+    int	i;
+    int	d;
+    int	x;
+    int	y;
+    int	a;
+}				t_raycasting_data;
+
+typedef struct	s_window
+{
+    const char		*title;
+    unsigned int	width;
+    unsigned int	height;
+    void			*win_ptr;
+    void			*mlx_ptr;
+    void			*surface;
+    char			*data;
+}				t_window;
+
+typedef struct	s_texture
+{
+    char			*filename;
+    int				width;
+    int				height;
+    void			*ptr;
+    char			*data;
+}				t_texture;
+
+typedef struct	s_sprite
+{
+    int				x;
+    int				y;
+    float			sprite_x;
+    float			sprite_y;
+    float			dir_x;
+    float			dir_y;
+    float			inv_det;
+    int				sprite_screen_x;
+    int				sprite_width;
+    int				sprite_height;
+    int				draw_start_x;
+    int				draw_end_x;
+    int				draw_start_y;
+    int				draw_end_y;
+    unsigned char	color[4];
+    float			transform_x;
+    float			transform_y;
+    int				texture_x;
+    int				texture_y;
+}				t_sprite;
+
+typedef struct	s_ray
+{
+    t_texture	*texture;
+    float		angle;
+    float		distance;
+    float		side_dist_x;
+    float		side_dist_y;
+    float		delta_dist_x;
+    float		delta_dist_y;
+    float		step_x;
+    float		step_y;
+    float		wall_x;
+    int			map_x;
+    int			map_y;
+    float		ray_dir_x;
+    float		ray_dir_y;
+}				t_ray;
+
+typedef struct	s_world
+{
+    float			angle;
+    int				**map;
+    t_list			*sprites;
+    t_ray			**rays;
+    t_texture		*texture_o;
+    t_texture		*texture_e;
+    t_texture		*texture_s;
+    t_texture		*texture_n;
+    t_texture		*texture_sprite;
+    unsigned char	color_ceil[4];
+    unsigned char	color_floor[4];
+    int				mx;
+    int				my;
+    float			px;
+    float			py;
+    float			pz;
+    float			plane_x;
+    float			plane_y;
+}				t_world;
+
+typedef struct	s_game
+{
+    t_keys		*keys;
+    t_window	*win;
+    t_world		*world;
+    int			save;
+    void		(*draw)(struct s_game *);
+}				t_game;
+
+typedef struct	s_conf
+{
+    void			*tmp_mlx_ptr;
+    t_texture		*texture_e;
+    t_texture		*texture_w;
+    t_texture		*texture_n;
+    t_texture		*texture_s;
+    t_texture		*texture_sprite;
+    t_list			*map_tmp;
+    int				**map;
+    int				width;
+    int				height;
+    int				map_width;
+    int				map_height;
+    int				px;
+    int				py;
+    char			orientation;
+    char            *err_str;
+    unsigned char	ceil[3];
+    unsigned char	floor[3];
+    int				map_started;
+}				t_conf;
+
+typedef struct	s_rect
+{
+    int width;
+    int height;
+    int x;
+    int y;
+}				t_rect;
+
+void		f_print_err(int errcode, t_conf *conf);
+void	ft_exit_errcode(int errcode, t_conf *conf);
+t_conf  *ft_parse(char *filepath);
 
 #endif

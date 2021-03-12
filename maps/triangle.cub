@@ -1,0 +1,21 @@
+R        700   700
+EA    ./textures/picture_dawn.xpm
+SO    ./textures/picture_sunrise.xpm
+WE     ./textures/picture_cloud.xpm
+NO     ./textures/picture_night.xpm
+S      ./textures/sonic.xpm
+F       150,   200,     200
+C  52  ,    100,    188
+
+111111111111111111111 11111111111111111111
+ 1000000000000000001
+  100000000N0000001
+   100000000000001
+    1000000000001
+     10000000001
+      100000001
+       1200001
+        10001
+         101
+          1
+    1
