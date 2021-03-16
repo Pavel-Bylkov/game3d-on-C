@@ -3,6 +3,7 @@
 
 # include <stdio.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <math.h>
 # include <errno.h>
 # include <string.h>
@@ -149,8 +150,8 @@ typedef struct	s_conf
     t_texture		*texture_sprite;
     t_list			*map_tmp;
     int				**map;
-    int				width;
-    int				height;
+    int				win_width;
+    int				win_height;
     int				map_width;
     int				map_height;
     int				px;
@@ -170,8 +171,25 @@ typedef struct	s_rect
     int y;
 }				t_rect;
 
+typedef struct	s_flag
+{
+    unsigned char R;
+    unsigned char NO;
+    unsigned char SO;
+    unsigned char WE;
+    unsigned char EA;
+    unsigned char S;
+    unsigned char F;
+    unsigned char C;
+    unsigned char posN;
+    unsigned char posS;
+    unsigned char posE;
+    unsigned char posW;
+}				t_flag;
+
 void		f_print_err(int errcode, t_conf *conf);
 void	ft_exit_errcode(int errcode, t_conf *conf);
-t_conf  *ft_parse(char *filepath);
+void ft_parse(char *filepath, t_conf *conf);
+void clear_conf(t_conf *conf);
 
 #endif

@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: whector <whector@student.21-school.ru>     +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/09 12:37:15 by whector           #+#    #+#             */
-/*   Updated: 2020/11/13 09:29:18 by whector          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
 
 char	*ft_strjoin(char *s1, char const *s2)
@@ -35,16 +23,6 @@ char	*ft_strjoin(char *s1, char const *s2)
 	return (res);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	size_t i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
 char	*ft_str_endl(char *s)
 {
 	char	*str;
@@ -59,23 +37,4 @@ char	*ft_str_endl(char *s)
 		str++;
 	}
 	return (NULL);
-}
-
-char	*ft_strdup(const char *str)
-{
-	char	*src;
-	size_t	len;
-	char	*dst;
-	char	*strcp;
-
-	len = ft_strlen(str);
-	src = (char *)str;
-	dst = (char *)malloc(len + 1);
-	if (NULL == dst)
-		return (NULL);
-	strcp = dst;
-	while (len-- != 0)
-		*strcp++ = *src++;
-	*strcp = '\0';
-	return (dst);
 }

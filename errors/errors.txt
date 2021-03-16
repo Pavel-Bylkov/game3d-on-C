@@ -1,7 +1,7 @@
 code # 150
 Wrong number of arguments.
 DESCRIPTION: There can be only one or two arguments.
-The first argument MUST be a '.cub' map-file.
+The first argument MUST be a '*.cub' map-file.
 The second argument CAN be '--save', in this case the 'cub3D' just takes screenshot of spawn scene and quits.
 ##
 code # 151
