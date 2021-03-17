@@ -79,15 +79,10 @@ int     main(int ac, char **av)
 {
     /*t_game	*game;*/
     t_conf	conf;
-    int     len;
 
     errno = 0;
     if (ac < 2 || ac > 3)
         ft_exit_errcode(150, NULL);
-    len = ft_strlen(av[1]);
-    if (len < 5 || ft_strncmp(&av[1][len - 4], ".cub", 5) \
-            || (ft_isdigit(av[1][len - 5]) || ft_isalpha(av[1][len - 5])))
-        ft_exit_errcode(152, NULL);
     if (ac == 3 && ft_strncmp(av[2], "––save", 7))
         ft_exit_errcode(153, NULL);
     ft_conf_init(&conf);

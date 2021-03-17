@@ -61,7 +61,6 @@ typedef struct	s_window
 
 typedef struct	s_texture
 {
-    char			*filename;
     int				width;
     int				height;
     void			*ptr;
@@ -191,5 +190,7 @@ void		f_print_err(int errcode, t_conf *conf);
 void	ft_exit_errcode(int errcode, t_conf *conf);
 void ft_parse(char *filepath, t_conf *conf);
 void clear_conf(t_conf *conf);
+t_texture	*load_texture(void *mlx_ptr, char *filename);
+void		del_texture(void *mlx_ptr, t_texture *texture);
 
 #endif

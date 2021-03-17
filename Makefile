@@ -9,6 +9,9 @@ FLAG_GCC = -Wall -Wextra -Werror
 
 CUB_FUNC = main.c \
 			parsing_conf.c \
+			clearing_data.c \
+			errors.c \
+			texture.c \
 			get_next_line.c get_next_line_utils.c
 
 SOURCES = src
