@@ -1,5 +1,6 @@
 #include <cub3d.h>
-#include "../includes/cub3d.h"
+#include "libft.h"
+#include "mlx.h"
 
 t_texture	*load_texture(void *mlx_ptr, char *filename)
 {

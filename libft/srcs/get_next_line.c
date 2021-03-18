@@ -1,3 +1,4 @@
+
 #include "get_next_line.h"
 
 static int		free_str(char **cur, char **buf)
@@ -16,9 +17,9 @@ static int		get_cur_line(char **cur, char **line, char *p_n, char **buf)
 	char	*new;
 
 	*p_n = '\0';
-	if (!(*line = ft_strdup(*cur)))
+	if (!(*line = gnl_strdup(*cur)))
 		return (free_str(cur, buf));
-	if (!(new = ft_strdup(++p_n)))
+	if (!(new = gnl_strdup(++p_n)))
 	{
 		free(*line);
 		*line = NULL;
@@ -36,7 +37,7 @@ static int		eof_checker(char **cur, char **line, ssize_t i, char **buf)
 
 	if (i < 0)
 		return (free_str(cur, buf));
-	if (*cur && (p_n = ft_str_endl(*cur)))
+	if (*cur && (p_n = gnl_str_endl(*cur)))
 		return (get_cur_line(cur, line, p_n, buf));
 	if (*cur != NULL)
 	{
@@ -46,7 +47,7 @@ static int		eof_checker(char **cur, char **line, ssize_t i, char **buf)
 		return (0);
 	}
 	empty[0] = '\0';
-	*line = ft_strdup(empty);
+	*line = gnl_strdup(empty);
 	if (*line == NULL)
 		return (free_str(cur, buf));
 	free_str(cur, buf);
@@ -71,11 +72,11 @@ int				get_next_line(int fd, char **line)
 	{
 		buf[i] = '\0';
 		tmp = arr[fd];
-		if (!(arr[fd] = ft_strjoin(tmp, buf)))
+		if (!(arr[fd] = gnl_strjoin(tmp, buf)))
 			return (free_str(&tmp, &buf));
 		if (tmp != NULL)
 			free(tmp);
-		if ((p_n = ft_str_endl(arr[fd])))
+		if ((p_n = gnl_str_endl(arr[fd])))
 			return (get_cur_line(&arr[fd], line, p_n, &buf));
 	}
 	return (eof_checker(&arr[fd], line, i, &buf));

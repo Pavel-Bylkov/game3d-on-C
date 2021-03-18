@@ -1,5 +1,5 @@
 #include "cub3d.h"
-#include "../includes/cub3d.h"
+#include "libft.h"
 
 
 void    skip_spaces(char *line, int *i)

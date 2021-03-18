@@ -1,6 +1,6 @@
 #include "cub3d.h"
-#include "../includes/cub3d.h"
-
+#include "libft.h"
+#include "mlx.h"
 
 static int ft_conf_init(t_conf *conf)
 {

@@ -1,5 +1,5 @@
 #include "cub3d.h"
-#include "../includes/cub3d.h"
+#include "libft.h"
 
 static void	ft_print_error(int fd, int errcode, t_conf *conf)
 {
@@ -13,13 +13,12 @@ static void	ft_print_error(int fd, int errcode, t_conf *conf)
         i = get_next_line(fd, &line);
         if (line != NULL && !ft_strncmp(line, "code #", 6))
         {
-            code = ft_atoi(&line[6]);
-            if (code == errcode)
+            if (ft_atoi(&line[6]) == errcode)
             {
                 ft_putendl_fd("Error", 2);
                 while (i > 0 && line != NULL && ft_strncmp(line, "##", 2))
                 {
-                    ft_putendl_fd(line, 2)
+                    ft_putendl_fd(line, 2);
                     free(line);
                     i = get_next_line(fd, &line);
                 }

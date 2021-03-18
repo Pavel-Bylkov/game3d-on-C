@@ -7,9 +7,6 @@
 # include <math.h>
 # include <errno.h>
 # include <string.h>
-# include "libft.h"
-# include "get_next_line.h"
-# include "mlx.h"
 
 # define ERRORS_FILE "./errors/errors.txt"
 # define PLAYER_SPEED 0.1
@@ -187,9 +184,9 @@ typedef struct	s_flag
 }				t_flag;
 
 void		f_print_err(int errcode, t_conf *conf);
-void	ft_exit_errcode(int errcode, t_conf *conf);
-void ft_parse(char *filepath, t_conf *conf);
-void clear_conf(t_conf *conf);
+void	    ft_exit_errcode(int errcode, t_conf *conf);
+void        ft_parse(char *filepath, t_conf *conf);
+void        clear_conf(t_conf *conf);
 t_texture	*load_texture(void *mlx_ptr, char *filename);
 void		del_texture(void *mlx_ptr, t_texture *texture);
 
