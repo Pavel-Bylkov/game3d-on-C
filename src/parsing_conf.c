@@ -243,6 +243,8 @@ static void  check_map_lines(t_conf *conf, t_flag *flags, char *line)
             if (line[i] != '1' && line[i] != ' ')
                 ft_exit_errcode(170, conf);
     }
+    else if (conf->map_started == 1 && line[i] != '1')
+        ft_exit_errcode(171, conf);
     while (conf->map_started && line[i])
     {
         if (ft_strnchr("102NSEW ", line[i]) < 0)
@@ -266,8 +268,8 @@ static void check_map_last_line(t_conf *conf, char *line)
     skip_spaces(line, &i);
     if (line[i] == '\0')
         ft_exit_errcode(159, conf);
-    while (line[++i])
-        if (line[i] != '1' && line[i] != ' ')
+    while (line[i])
+        if (line[i] != '1' && line[i++] != ' ')
             ft_exit_errcode(166, conf);
     if (i > conf->map_width)
         conf->map_width = i;
@@ -298,6 +300,131 @@ static void checking_map(t_conf *conf)
         ft_exit_errcode(167, conf);
 }
 
+static t_list *skip_indifer(t_list *map)
+{
+    int     i;
+    char    *line;
+
+    while (map)
+    {
+        i = 0;
+        line = map->content;
+        skip_spaces(line, &i);
+        if (line[i] == '1')
+            return (map);
+        map = map->next;
+    }
+    return (map);
+}
+
+static void	create_map_line(char s, t_conf *conf, int x, int y)
+{
+    if (s == '0')
+        conf->map[y][x] = 3;
+    else if (s == '1')
+        conf->map[y][x] = 1;
+    else if (s == '2')
+        conf->map[y][x] = 2;
+    else if (s == 'N' || s == 'S' || s == 'E' || s == 'W')
+    {
+        conf->px = x;
+        conf->py = y;
+        conf->orientation = s;
+        conf->map[y][x] = 3;
+    }
+}
+
+void    create_map(t_conf *conf)
+{
+    t_list  *tmp;
+    int     x;
+    int     y;
+    char    *line;
+
+    conf->map = (unsigned char **)ft_calloc(sizeof(unsigned char *),
+                                            conf->map_height);
+    y = -1;
+    while (++y < conf->map_height)
+        conf->map[y] = (unsigned char *)ft_calloc(sizeof(unsigned char),
+                                                  conf->map_width);
+    y = -1;
+    tmp = skip_indifer(conf->map_tmp);
+    while (tmp && ++y < conf->map_height)
+    {
+        x = -1;
+        line = tmp->content;
+        while (++x < conf->map_width && line[x])
+            create_map_line(line[x], conf, x, y);
+        tmp = tmp->next;
+    }
+}
+
+static void print_info_map(t_conf *conf)
+{
+    int x;
+    int y;
+
+    ft_putstr_fd("Texture EA : width ", 1);
+    ft_putnbr_fd(conf->texture_e->width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->texture_e->height, 1);
+    ft_putstr_fd("\n", 1);
+    ft_putstr_fd("Texture WE : width ", 1);
+    ft_putnbr_fd(conf->texture_w->width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->texture_w->height, 1);
+    ft_putstr_fd("\n", 1);
+    ft_putstr_fd("Texture NO : width ", 1);
+    ft_putnbr_fd(conf->texture_n->width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->texture_n->height, 1);
+    ft_putstr_fd("\n", 1);
+    ft_putstr_fd("Texture SO : width ", 1);
+    ft_putnbr_fd(conf->texture_s->width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->texture_s->height, 1);
+    ft_putstr_fd("\n", 1);
+    ft_putstr_fd("Texture Sprite : width ", 1);
+    ft_putnbr_fd(conf->texture_sprite->width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->texture_sprite->height, 1);
+    ft_putstr_fd("\n\nWindows resolution: width ", 1);
+    ft_putnbr_fd(conf->win_width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->win_height, 1);
+    ft_putstr_fd("\n\nMap size: width ", 1);
+    ft_putnbr_fd(conf->map_width, 1);
+    ft_putstr_fd(", height ", 1);
+    ft_putnbr_fd(conf->map_height, 1);
+    ft_putstr_fd("\n\nHero spawn: x - ", 1);
+    ft_putnbr_fd(conf->px, 1);
+    ft_putstr_fd(", y - ", 1);
+    ft_putnbr_fd(conf->py, 1);
+    ft_putstr_fd(", orientation - ", 1);
+    ft_putchar_fd(conf->orientation, 1);
+    ft_putstr_fd("\n\nColor Ceil: ", 1);
+    ft_putnbr_fd(conf->ceil[0], 1);
+    ft_putstr_fd(", ", 1);
+    ft_putnbr_fd(conf->ceil[1], 1);
+    ft_putstr_fd(", ", 1);
+    ft_putnbr_fd(conf->ceil[2], 1);
+    ft_putstr_fd("\n\nColor Floor: ", 1);
+    ft_putnbr_fd(conf->floor[0], 1);
+    ft_putstr_fd(", ", 1);
+    ft_putnbr_fd(conf->floor[1], 1);
+    ft_putstr_fd(", ", 1);
+    ft_putnbr_fd(conf->floor[2], 1);
+    ft_putstr_fd("\n\nMap array:\n", 1);
+    y = -1;
+    while (++y < conf->map_height)
+    {
+        x = -1;
+        while (++x < conf->map_width)
+            ft_putnbr_fd(conf->map[y][x], 1);
+        ft_putstr_fd("\n", 1);
+    }
+}
+
 void ft_parse(char *filepath, t_conf *conf)
 {
     int		fd;
@@ -320,4 +447,5 @@ void ft_parse(char *filepath, t_conf *conf)
         ft_exit_errcode(151, conf);
     checking_map(conf);
     create_map(conf);
+    print_info_map(conf);
 }

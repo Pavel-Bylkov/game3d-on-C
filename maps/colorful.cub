@@ -1,11 +1,11 @@
 R        1010   1010
-NO./textures/ai.xpm
-SO./././textures/picture_sunrise.xpm
-WE     textures/picture_dawn.xpm
+NO./res/ai.xpm
+SO./././res/picture_sunrise.xpm
+WE     res/picture_dawn.xpm
 
-EA      textures/picture_cloud.xpm
+EA      res/picture_cloud.xpm
 
-S        textures/spiral.xpm
+S        res/spiral.xpm
 
 F       33 ,   68 ,     25
 

@@ -1,9 +1,9 @@
 R        1700   1700
-NO    ./textures/son3.xpm
-SO    ./textures/son2.xpm
-WE      ./textures/son1.xpm
-EA       ./textures/son4.xpm
-S        ./textures/sonic.xpm
+NO    ./res/son3.xpm
+SO    ./res/son2.xpm
+WE      ./res/son1.xpm
+EA       ./res/son4.xpm
+S        ./res/sonic.xpm
 F       42,   212,     39
 C  190  ,    238,    239
 

@@ -1,9 +1,9 @@
 R        700   700
-EA    ./textures/picture_dawn.xpm
-SO    ./textures/picture_sunrise.xpm
-WE     ./textures/picture_cloud.xpm
-NO     ./textures/picture_night.xpm
-S      ./textures/sonic.xpm
+EA    ./res/picture_dawn.xpm
+SO    ./res/picture_sunrise.xpm
+WE     ./res/picture_cloud.xpm
+NO     ./res/picture_night.xpm
+S      ./res/sonic.xpm
 F       150,   200,     200
 C  52  ,    100,    188
 

@@ -12,6 +12,7 @@ CUB_FUNC = main.c \
 			clearing_data.c \
 			errors.c \
 			texture.c \
+			clearing.c \
 			get_next_line.c get_next_line_utils.c
 
 SOURCES = src

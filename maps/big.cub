@@ -1,11 +1,11 @@
 R        1500   1500
-NO./textures/rap1.xpm
-SO./././textures/rap2.xpm
-WE     textures/rap3.xpm
+NO./res/rap1.xpm
+SO./././res/rap2.xpm
+WE     res/rap3.xpm
 
-EA      textures/rap5.xpm
+EA      res/rap5.xpm
 
-S        textures/rap.xpm
+S        res/rap.xpm
 
 F       30 ,   30 ,     10
 

@@ -1,13 +1,13 @@
 R        1500   1500
-NO./textures/ai.xpm
-SO./././textures/picture_sunrise.xpm
-WE     textures/picture_dawn.xpm
+NO./res/ai.xpm
+SO./././res/picture_sunrise.xpm
+WE     res/picture_dawn.xpm
 
-EA      textures/picture_cloud.xpm
+EA      res/picture_cloud.xpm
 
-S        textures/golden_flare.xpm
+S        res/golden_flare.xpm
 
-F textures/picture_cloud.xpm
+F res/picture_cloud.xpm
 
 C 0  ,    1,    88
 

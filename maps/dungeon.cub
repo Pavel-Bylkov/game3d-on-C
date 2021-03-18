@@ -1,16 +1,16 @@
 R        100000  4500
 
-NO./textures/rap1.xpm
-SO./././textures/rap2.xpm
-WE     textures/rap3.xpm
+NO./res/rap1.xpm
+SO./././res/rap2.xpm
+WE     res/rap3.xpm
 
-EA      textures/rap5.xpm
+EA      res/rap5.xpm
 
-S        textures/rap.xpm
+S        res/rap.xpm
 
 F       24,   18 ,     14
 
-C  ./textures/night_sky.xpm
+C  ./res/night_sky.xpm
 
                 11111111111
                1000020200001

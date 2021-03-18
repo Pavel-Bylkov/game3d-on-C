@@ -148,7 +148,7 @@ typedef struct	s_conf
     t_texture		*texture_s;
     t_texture		*texture_sprite;
     t_list			*map_tmp;
-    int				**map;
+    unsigned char	**map;
     int				win_width;
     int				win_height;
     int				map_width;

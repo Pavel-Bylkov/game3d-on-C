@@ -14,8 +14,8 @@ static int ft_conf_init(t_conf *conf)
     conf->texture_sprite = NULL;
     conf->map_tmp = NULL;
     conf->map = NULL;
-    conf->width = 0;
-    conf->height = 0;
+    conf->win_width = 0;
+    conf->win_height = 0;
     conf->map_width = 0;
     conf->map_height = 0;
     conf->px = 0;
