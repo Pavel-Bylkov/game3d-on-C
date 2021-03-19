@@ -1,5 +1,6 @@
 #include "cub3d.h"
 #include "libft.h"
+#include "get_next_line.h"
 
 static void	ft_print_error(int fd, int errcode, t_conf *conf)
 {

@@ -7,6 +7,7 @@
 # include <math.h>
 # include <errno.h>
 # include <string.h>
+# include "libft.h"
 
 # define ERRORS_FILE "./errors/errors.txt"
 # define PLAYER_SPEED 0.1

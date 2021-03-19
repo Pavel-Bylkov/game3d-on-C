@@ -1,9 +1,9 @@
 R        700   700
 NO    ./res/gold.xpm
 SO    ./res/green.xpm
-WE       ./res/gradient.xpm
+WE       ./res/greeny_wall.xpm
 EA       ./res/poligons.xpm
-S         ./res/spiral.xpm
+S         ./res/sonic.xpm
 F       33,   68,     25
 C  52  ,    1,    88
 

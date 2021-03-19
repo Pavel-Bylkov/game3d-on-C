@@ -23,7 +23,7 @@ CHECK_OBJS = fclean_keep_bmp
 #--------------------------------- cub3D compiling -----------------------------
 SRCDIR		= src/
 OBJDIR		= objs/
-FLSDIR		= ./
+FLSDIR		=
 
 FLS_1	= $(addprefix $(FLSDIR), \
 			main \
@@ -41,7 +41,7 @@ DFLS		= $(SRC:=.d)
 
 all: $(NAME)
 
-$(NAME):		$(FCLEAN_FLAG) $(LIBFT) $(MLX) $(OBJ)
+$(NAME):		$(FCLEAN_FLAG) $(LIBFT) $(OBJ)
 	@echo '----Making cub3D ------'
 	$(CC)		$(FLAGS) $(OBJ) $(INCLUDES) $(LIBFLAGS) -o $(NAME)
 	@echo "Ready"
@@ -53,10 +53,16 @@ $(OBJ):			$(OBJDIR)%.o: $(SRCDIR)%.c
 
 include $(wildcard $(addprefix $(OBJDIR), $(DFLS)))
 
+run: all
+	./$(NAME) maps/default.cub
+
+save: all
+	./$(NAME) maps/default.cub --save
+
 clean:
 	rm -rf		$(OBJDIR)
 
-clean_all: clean libft_clean mlx_clean
+clean_all: clean libft_clean
 
 fclean:			clean
 	rm -f		$(NAME)
@@ -84,46 +90,8 @@ libft_fclean:
 libft_re:
 	make re		-C libft/
 
-$(MLX):
-	@make -C $(MLX_DIR)
-	@echo 'Making minilibx done'
-
-$(MLX):  mlx_force_make
-	@echo '----------- Making minilibx ----------'
-	@make		-C $(MLX_DIR) --no-print-directory
-
-mlx_clean:
-	make clean	-C $(MLX_DIR)
-
-mlx_fclean:
-	make fclean	-C $(MLX_DIR)
-
-mlx_re:
-	make re		-C $(MLX_DIR)
-
-libs: $(LIBFT) $(MLX)
-
-run: all
-	./$(NAME) maps/default.cub
-
-save: all
-	./$(NAME) maps/default.cub --save
-
 norma:
 	norminette ./src/ ./libft/srcs/*.c ./libft/includes/*.h ./includes/
-
-clean:
-	@rm -f $(FILES_O)
-	@rm -rf $(OBJ)
-	@make clean -C ./libft
-	@make clean -C $(MLX_DIR)
-	@echo "O-files deleted"
-
-fclean: clean
-	@rm -f $(NAME)
-	@rm -rf *.bmp
-	@make fclean -C ./libft
-	@echo "All files delete"
 
 re: fclean all
 

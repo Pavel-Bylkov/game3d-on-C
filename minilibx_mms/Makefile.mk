@@ -1,3 +1,4 @@
+#duplicate om minilibx Makefile to make reconfiguring of cub3D sources
 MODULE_SRC= mlx_image.swift mlx_window.swift mlx_init.swift
 MODULE_OBJ=$(MODULE_SRC:.swift=.swiftmodule)
 

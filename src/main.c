@@ -2,7 +2,7 @@
 #include "libft.h"
 #include "mlx.h"
 
-static int ft_conf_init(t_conf *conf)
+static void ft_conf_init(t_conf *conf)
 {
     conf->tmp_mlx_ptr = mlx_init();
     if (conf->tmp_mlx_ptr == NULL)

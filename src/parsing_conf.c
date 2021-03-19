@@ -1,6 +1,6 @@
 #include "cub3d.h"
 #include "libft.h"
-
+#include "get_next_line.h"
 
 void    skip_spaces(char *line, int *i)
 {
@@ -25,8 +25,9 @@ static int  ft_path_endwith(char *path, char *end)
     min_path = len_end + 1;
     if (len_path < min_path
             || ft_strncmp(&path[len_path - len_end], end, min_path)
-            || (ft_isdigit(path[len_path - min_path])
-            || ft_isalpha(path[len_path- min_path])))
+            || (!ft_isdigit(path[len_path - min_path])
+            && !ft_isalpha(path[len_path- min_path])
+            && path[len_path- min_path] != '_'))
         return (0);
     return (1);
 }
@@ -60,7 +61,10 @@ void        check_resolution(t_conf *conf, char *line)
             i++;
         conf->win_height = ft_atoi(&line[i]);
         skip_spaces(line, &i);
-        if (line[i])
+        while (ft_isdigit(line[i]))
+            i++;
+        skip_spaces(line, &i);
+        if (line[i] != '\0')
         {
             conf->err_str = ft_strdup(line);
             ft_exit_errcode(160, conf);
@@ -132,6 +136,7 @@ void    check_color(t_conf *conf, char *line)
             ft_exit_errcode(164, conf);
         while (ft_isdigit(line[i]))
             i++;
+        skip_spaces(line, &i);
         if (k < 2 && line[i] && line[i++] != ',')
             ft_exit_errcode(163, conf);
     }
@@ -267,10 +272,16 @@ static void check_map_last_line(t_conf *conf, char *line)
         ft_exit_errcode(158, conf);
     skip_spaces(line, &i);
     if (line[i] == '\0')
+    {
+        conf->err_str = ft_strdup(line);
         ft_exit_errcode(159, conf);
-    while (line[i])
-        if (line[i] != '1' && line[i++] != ' ')
+    }
+    while (line[i] != '\0')
+    {
+        if (line[i] != '1' && line[i] != ' ')
             ft_exit_errcode(166, conf);
+        i++;
+    }
     if (i > conf->map_width)
         conf->map_width = i;
 }
@@ -428,7 +439,6 @@ static void print_info_map(t_conf *conf)
 void ft_parse(char *filepath, t_conf *conf)
 {
     int		fd;
-    int		ret;
     char	*line;
 
     if (!ft_path_endwith(filepath, ".cub"))
