@@ -20,7 +20,7 @@ override FLAGS ?= $(CFLAGS)
 # check if fclean needed after last project building
 CHECK_OBJS = fclean_keep_bmp
 
-#--------------------------------- cub3D compiling -----------------------------
+#--------- cub3D compiling -----------
 SRCDIR		= src/
 OBJDIR		= objs/
 FLSDIR		=
@@ -28,8 +28,16 @@ FLSDIR		=
 FLS_1	= $(addprefix $(FLSDIR), \
 			main \
 			clearing \
+			draw_back \
+			draw_sprites \
+			draw_vline \
 			errors \
 			parsing_conf \
+			raycasting \
+			start_game \
+			keys \
+			sprites \
+			screenshot \
 			texture )
 
 FCLEAN_FLAG	= $(CHECK_OBJS)

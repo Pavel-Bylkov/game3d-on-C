@@ -29,56 +29,43 @@ static void ft_conf_init(t_conf *conf)
     conf->floor[1] = 0;
     conf->floor[2] = 0;
     conf->map_started = 0;
+    conf->save = 0;
 }
-
-/*
-void	update(t_game *game)
-{
-    if (game->keys->k_w)
-        go(game, 0);
-    if (game->keys->k_a)
-        go(game, 1);
-    if (game->keys->k_s)
-        go(game, 2);
-    if (game->keys->k_d)
-        go(game, 3);
-    if (game->keys->k_left)
-        rotate(game, -1);
-    if (game->keys->k_right)
-        rotate(game, 1);
-}
-
-void	draw(t_game *game)
-{
-    update(game);
-    mlx_clear_window(game->win->mlx_ptr, game->win->win_ptr);
-    clear_data(game->win);
-    raycast(game->world);
-    draw_ceil_floor(game);
-    draw_rays(game);
-    draw_sprites(game);
-    draw_hud(game);
-    if (game->save)
-    {
-        save_screenshot();
-        stop_game(game);
-    }
-    mlx_put_image_to_window(game->win->mlx_ptr, game->win->win_ptr,
-                            game->win->surface, 0, 0);
-}
-*/
 
 void	ft_exit_errcode(int errcode, t_conf *conf)
 {
-    f_print_err(errcode, conf);
+    print_err(errcode, conf);
     clear_conf(conf);
     exit(EXIT_FAILURE);
 }
 
+int			ft_exit_close_win(t__win_mlx *mlx)
+{
+    t_spr		*sp_tmp;
+
+    if (mlx->game.wall_dist_arr)
+        free(mlx->game.wall_dist_arr);
+    if (mlx->win_ptr)
+        mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+    if (mlx->win_img)
+        del_texture(mlx->mlx_ptr, mlx->win_img);
+    if (mlx->sprites)
+    {
+        while (mlx->sprites)
+        {
+            sp_tmp = mlx->sprites->next;
+            free(mlx->sprites);
+            mlx->sprites = sp_tmp;
+        }
+    }
+    free(mlx->mlx_ptr);
+    ft_exit_errcode(mlx->errcode, mlx->conf);
+}
+
 int     main(int ac, char **av)
 {
-    /*t_game	*game;*/
-    t_conf	conf;
+    t_win_mlx   win_mlx;
+    t_conf      conf;
 
     errno = 0;
     if (ac < 2 || ac > 3)
@@ -86,14 +73,12 @@ int     main(int ac, char **av)
     if (ac == 3 && ft_strncmp(av[2], "––save", 7))
         ft_exit_errcode(153, NULL);
     ft_conf_init(&conf);
-    ft_parse(av[1], &conf);
-    /*game = create_game(conf, "Cub3D");
     if (ac == 3)
-        game->save = 1;
-    game->draw = &draw;
-    clear_conf(&conf);
-    game_loop(game);
-    del_game(game);*/
+        conf.save = 1;
+    ft_parse(av[1], &conf);
+    start_game(&win_mlx, &conf);
+    mlx_loop(win_mlx.mlx_ptr);
+    del_game(&win_mlx);
     return (EXIT_SUCCESS);
 }
 

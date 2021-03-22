@@ -14,6 +14,12 @@ void    skip_spaces(char *line, int *i)
     }
 }
 
+void    skip_digit(char *line, int *i)
+{
+    while (ft_isdigit(line[*i]))
+        *i += 1;
+}
+
 static int  ft_path_endwith(char *path, char *end)
 {
     int len_path;
@@ -57,19 +63,18 @@ void        check_resolution(t_conf *conf, char *line)
         i = 1;
         skip_spaces(line, &i);
         conf->win_width = ft_atoi(&line[i]);
-        while (ft_isdigit(line[i]))
-            i++;
+        skip_digit(line, &i);
         conf->win_height = ft_atoi(&line[i]);
         skip_spaces(line, &i);
-        while (ft_isdigit(line[i]))
-            i++;
+        skip_digit(line, &i);
         skip_spaces(line, &i);
         if (line[i] != '\0')
         {
             conf->err_str = ft_strdup(line);
             ft_exit_errcode(160, conf);
         }
-        if (conf->win_width < 100 || conf->win_height < 100)
+        if (conf->win_width < MIN_WIN_WIDTH
+                || conf->win_height < MIN_WIN_HEIGHT)
             ft_exit_errcode(161, conf);
     }
 }
@@ -96,7 +101,7 @@ void    check_texture(t_conf *conf, char *line)
             && ft_path_endwith(&line[i], ".xpm") == 0)
         ft_exit_errcode(162, conf);
     check_fileopen(&line[i], conf);
-    tmp = load_texture(conf->tmp_mlx_ptr, &line[i]);
+    tmp = load_texture(conf, &line[i]);
     if (!ft_strncmp(line, "NO", 2))
         conf->texture_n = tmp;
     else if (!ft_strncmp(line, "SO", 2))
@@ -109,13 +114,6 @@ void    check_texture(t_conf *conf, char *line)
         conf->texture_sprite = tmp;
     else
         del_texture(conf->tmp_mlx_ptr, tmp);
-}
-
-static void set_color(unsigned char *ceil_floor, int *color)
-{
-    ceil_floor[0] = (unsigned char)color[0];
-    ceil_floor[1] = (unsigned char)color[1];
-    ceil_floor[2] = (unsigned char)color[2];
 }
 
 void    check_color(t_conf *conf, char *line)
@@ -134,8 +132,7 @@ void    check_color(t_conf *conf, char *line)
         color[k] = ft_atoi(&line[i]);
         if (color[k] < 0 || color[k] > 255)
             ft_exit_errcode(164, conf);
-        while (ft_isdigit(line[i]))
-            i++;
+        skip_digit(line, &i);
         skip_spaces(line, &i);
         if (k < 2 && line[i] && line[i++] != ',')
             ft_exit_errcode(163, conf);
@@ -144,9 +141,9 @@ void    check_color(t_conf *conf, char *line)
     if (line[i] != '\0')
         ft_exit_errcode(163, conf);
     if (line[0] == 'F')
-        set_color(conf->floor, color);
+        conf->floor = color[0] << 16 | color[1] << 8 | color[2];
     if (line[0] == 'C')
-        set_color(conf->ceil, color);
+        conf->ceil = color[0] << 16 | color[1] << 8 | color[2];
 }
 
 static int  check_indifer(unsigned char *flag, char *indifer, char *line)
@@ -345,6 +342,36 @@ static void	create_map_line(char s, t_conf *conf, int x, int y)
     }
 }
 
+void    check_close_map(t_conf *conf)
+{
+    int     x;
+    int     y;
+    int     error;
+
+    error = 0;
+    y = -1;
+    while (++y < conf->map_height - 1)
+    {
+        x = -1;
+        while (++x < conf->map_width - 1)
+        {
+            if (conf->map[y][x] == 0)
+                error = conf->map[y][x + 1] == 2 || conf->map[y][x + 1] == 3;
+            else if (conf->map[y][x] == 3 || conf->map[y][x] == 2)
+                error = conf->map[y][x + 1] == 0;
+            else if (conf->map[y][x] == 0)
+                error = conf->map[y + 1][x] == 2 || conf->map[y + 1][x] == 3;
+            else if (conf->map[y][x] == 3 || conf->map[y][x] == 2)
+                error = conf->map[y + 1][x] == 0;
+            if (error == 1)
+                ft_exit_errcode(171, conf);
+        }
+        if (conf->map[y][conf->map_width - 1] == 3
+                || conf->map[y][conf->map_width - 1] == 2)
+            ft_exit_errcode(171, conf);
+    }
+}
+
 void    create_map(t_conf *conf)
 {
     t_list  *tmp;
@@ -368,6 +395,7 @@ void    create_map(t_conf *conf)
             create_map_line(line[x], conf, x, y);
         tmp = tmp->next;
     }
+    check_close_map(conf);
 }
 
 static void print_info_map(t_conf *conf)
@@ -414,17 +442,17 @@ static void print_info_map(t_conf *conf)
     ft_putstr_fd(", orientation - ", 1);
     ft_putchar_fd(conf->orientation, 1);
     ft_putstr_fd("\n\nColor Ceil: ", 1);
-    ft_putnbr_fd(conf->ceil[0], 1);
+    ft_putnbr_fd((conf->ceil & 0x00FF0000) >> 16, 1);
     ft_putstr_fd(", ", 1);
-    ft_putnbr_fd(conf->ceil[1], 1);
+    ft_putnbr_fd((conf->ceil & 0x0000FF00) >> 8, 1);
     ft_putstr_fd(", ", 1);
-    ft_putnbr_fd(conf->ceil[2], 1);
+    ft_putnbr_fd(conf->ceil & 0x000000FF, 1);
     ft_putstr_fd("\n\nColor Floor: ", 1);
-    ft_putnbr_fd(conf->floor[0], 1);
+    ft_putnbr_fd((conf->floor & 0x00FF0000) >> 16, 1);
     ft_putstr_fd(", ", 1);
-    ft_putnbr_fd(conf->floor[1], 1);
+    ft_putnbr_fd((conf->floor & 0x0000FF00) >> 8, 1);
     ft_putstr_fd(", ", 1);
-    ft_putnbr_fd(conf->floor[2], 1);
+    ft_putnbr_fd(conf->floor & 0x000000FF, 1);
     ft_putstr_fd("\n\nMap array:\n", 1);
     y = -1;
     while (++y < conf->map_height)

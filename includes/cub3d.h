@@ -10,10 +10,14 @@
 # include "libft.h"
 
 # define ERRORS_FILE "./errors/errors.txt"
-# define PLAYER_SPEED 0.1
+# define TITLE "cub3D"
+# define MOVE_SPEED 0.1
 # define ROTATE_SPEED 3.0
 # define RAYS 200.0
 # define FOV 45.0
+# define MIN_WIN_WIDTH 100
+# define MIN_WIN_HEIGHT 100
+# define FOV_ANGLE 66
 # ifndef INF
 #  define INF 100000000.0
 # endif
@@ -24,7 +28,7 @@
 # define KEY_D 2
 # define KEY_RIGHT 124
 # define KEY_LEFT 123
-# define KEY_ESCAPE 53
+# define KEY_ESC 53
 
 typedef struct	s_keys
 {
@@ -36,106 +40,72 @@ typedef struct	s_keys
     int k_d;
 }				t_keys;
 
-typedef struct	s_raycasting_data
-{
-    int	res;
-    int	i;
-    int	d;
-    int	x;
-    int	y;
-    int	a;
-}				t_raycasting_data;
-
-typedef struct	s_window
-{
-    const char		*title;
-    unsigned int	width;
-    unsigned int	height;
-    void			*win_ptr;
-    void			*mlx_ptr;
-    void			*surface;
-    char			*data;
-}				t_window;
-
 typedef struct	s_texture
 {
     int				width;
     int				height;
     void			*ptr;
+    int			    bits_per_pix;
+    int			    line_len;
+    int			    endian;
     char			*data;
 }				t_texture;
 
-typedef struct	s_sprite
+typedef struct	s_spr
 {
-    int				x;
-    int				y;
-    float			sprite_x;
-    float			sprite_y;
-    float			dir_x;
-    float			dir_y;
-    float			inv_det;
-    int				sprite_screen_x;
-    int				sprite_width;
-    int				sprite_height;
-    int				draw_start_x;
-    int				draw_end_x;
-    int				draw_start_y;
-    int				draw_end_y;
-    unsigned char	color[4];
-    float			transform_x;
-    float			transform_y;
-    int				texture_x;
-    int				texture_y;
-}				t_sprite;
+    int			id;
+    float		x;
+    float		y;
+    float		dist;
+    struct s_sp	*prev;
+    struct s_sp	*next;
+}				t_spr;
 
-typedef struct	s_ray
+typedef struct	s_spr_vars
 {
-    t_texture	*texture;
-    float		angle;
-    float		distance;
+    float		dist_x;
+    float		dist_y;
+    float		inv_factor;
+    float		transform_x;
+    float		transform_y;
+    int			scr_x;
+    int			vert_offset;
+    int			width;
+    int			height;
+    int			start_x;
+    int			start_y;
+    int			end_x;
+    int			end_y;
+    int			tex_x;
+    int			tex_y;
+}				t_spr_vars;
+
+typedef struct	s_wall_vars
+{
+    int			map_x;
+    int			map_y;
     float		side_dist_x;
     float		side_dist_y;
     float		delta_dist_x;
     float		delta_dist_y;
-    float		step_x;
-    float		step_y;
-    float		wall_x;
-    int			map_x;
-    int			map_y;
+    int			step_x;
+    int			step_y;
+    float		camera_x;
     float		ray_dir_x;
     float		ray_dir_y;
-}				t_ray;
-
-typedef struct	s_world
-{
-    float			angle;
-    int				**map;
-    t_list			*sprites;
-    t_ray			**rays;
-    t_texture		*texture_o;
-    t_texture		*texture_e;
-    t_texture		*texture_s;
-    t_texture		*texture_n;
-    t_texture		*texture_sprite;
-    unsigned char	color_ceil[4];
-    unsigned char	color_floor[4];
-    int				mx;
-    int				my;
-    float			px;
-    float			py;
-    float			pz;
-    float			plane_x;
-    float			plane_y;
-}				t_world;
-
-typedef struct	s_game
-{
-    t_keys		*keys;
-    t_window	*win;
-    t_world		*world;
-    int			save;
-    void		(*draw)(struct s_game *);
-}				t_game;
+    int			hit;
+    float		wall_dist;
+    int			wall_side;
+    int			line_height;
+    int			line_start;
+    int			line_end;
+    float		wall_x;
+    int			tex_x;
+    int			tex_y;
+    float		tex_pos;
+    float		tex_step;
+    int			tex_mirror;
+}				t_wall_vars;
 
 typedef struct	s_conf
 {
@@ -155,18 +125,11 @@ typedef struct	s_conf
     int				py;
     char			orientation;
     char            *err_str;
-    unsigned char	ceil[3];
-    unsigned char	floor[3];
+    int	            ceil;
+    int         	floor;
     int				map_started;
+    int             save;
 }				t_conf;
-
-typedef struct	s_rect
-{
-    int width;
-    int height;
-    int x;
-    int y;
-}				t_rect;
 
 typedef struct	s_flag
 {
@@ -184,11 +147,74 @@ typedef struct	s_flag
     unsigned char posW;
 }				t_flag;
 
-void		f_print_err(int errcode, t_conf *conf);
+typedef struct	s_game
+{
+    float		player_x;
+    float		player_y;
+    float		dir_x;
+    float		dir_y;
+    float		plane_x;
+    float		plane_y;
+    float		move_speed;
+    float		rot_speed;
+    float		*wall_dist_arr;
+    float		old_dir_x;
+    float		old_dir_y;
+    float		old_plane_x;
+    float		old_plane_y;
+}				t_game;
+
+typedef struct	s_win_mlx
+{
+    int			win_width;
+    int			win_height;
+    t_texture	*win_img;
+    t_texture	*tex_ea;
+    t_texture	*tex_we;
+    t_texture	*tex_no;
+    t_texture	*tex_so;
+    t_texture	*tex_spr;
+    void		*win_ptr;
+    void		*mlx_ptr;
+    void		*surface;
+    char		*data;
+    t_keys      keys;
+    t_game		game;
+    t_spr		*sprites;
+    int			errcode;
+    t_conf      *conf;
+}				t_win_mlx;
+
+void		print_err(int errcode, t_conf *conf);
 void	    ft_exit_errcode(int errcode, t_conf *conf);
+int			ft_exit_close_win(t__win_mlx *mlx);
 void        ft_parse(char *filepath, t_conf *conf);
 void        clear_conf(t_conf *conf);
-t_texture	*load_texture(void *mlx_ptr, char *filename);
+void    del_game(t_win_mlx *mlx);
+t_texture	*load_texture(t_conf *conf, char *filename);
+int	    create_win_texture(t_win_mlx *mlx);
 void		del_texture(void *mlx_ptr, t_texture *texture);
+void		start_game(t_win_mlx *win_mlx, t_conf *conf);
+int			ft_game_init(t_win_mlx *mlx);
+void		sprites_init(t_win_mlx *mlx);
+void		screenshot(t_win_mlx *mlx);
+void		raycasting(t_win_mlx *mlx);
+void    create_map(t_conf *conf);
+void    check_close_map(t_conf *conf);
+void     check_identifiers(t_conf *conf, t_flag  *flags, char *line);
+void    check_color(t_conf *conf, char *line);
+void    check_texture(t_conf *conf, char *line);
+void        check_resolution(t_conf *conf, char *line);
+void    skip_digit(char *line, int *i);
+void    skip_spaces(char *line, int *i);
+int				key_release(int key, t_win_mlx *mlx);
+int				key_press(int key, t_win_mlx *mlx);
+int			update(t_win_mlx *mlx);
+void		draw_vert_line(t_win_mlx *mlx, t_wall_vars *w_vars, int x);
+int			sprites_handling(t_win_mlx *mlx);
+void		draw_sprite(t_win_mlx *mlx, t_spr *sp);
+void		draw_background(t_win_mlx *mlx);
+void		draw_pixel(t_texture *img, int x, int y, int color);
+int			draw_all(t_win_mlx *mlx);
 
 #endif

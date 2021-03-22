@@ -32,3 +32,26 @@ void		clear_conf(t_conf *conf)
         free(conf->map);
     }
 }
+
+void    del_game(t_win_mlx *mlx)
+{
+    t_spr		*sp_tmp;
+
+    if (mlx->game.wall_dist_arr)
+        free(mlx->game.wall_dist_arr);
+    if (mlx->win_ptr)
+        mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+    if (mlx->win_img)
+        del_texture(mlx->mlx_ptr, mlx->win_img);
+    if (mlx->sprites)
+    {
+        while (mlx->sprites)
+        {
+            sp_tmp = mlx->sprites->next;
+            free(mlx->sprites);
+            mlx->sprites = sp_tmp;
+        }
+    }
+    free(mlx->mlx_ptr);
+    clear_conf(win_mlx->conf);
+}

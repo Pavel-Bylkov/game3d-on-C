@@ -31,7 +31,7 @@ static void	ft_print_error(int fd, int errcode, t_conf *conf)
     }
 }
 
-void		f_print_err(int errcode, t_conf *conf)
+void		print_err(int errcode, t_conf *conf)
 {
     int     fd;
 

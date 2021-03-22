@@ -87,7 +87,7 @@ DESCRIPTION: in the first line of the map there can be no characters other than 
 (the map must be closed/surrounded by walls).
 ##
 code # 171
-Map column is invalid.
+Map is invalid.
 DESCRIPTION: the map must be closed/surrounded by walls.
 ##
 code # 172
